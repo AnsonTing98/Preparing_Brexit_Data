@@ -1,0 +1,91 @@
+# Task 1
+# Define the research questions
+
+# Task 2
+# Import dataset
+# Store file in WD and then read into a data frame
+
+brexit_data <- read.csv("data_brexit_referendum.csv")
+
+# Task 3
+# Examine the data type and structure of the imported structure.
+
+str(brexit_data)
+
+# Task 4 
+# Count no of "-1" values in the leave variable
+# and then replace with NA
+# use sum for the count first
+sum(brexit_data$Leave[brexit_data$Leave == -1])
+
+nrow(brexit_data[brexit_data$Leave == -1,])
+
+# There are 267
+
+# Then replace "-1" with NA
+brexit_data$Leave[brexit_data$Leave == -1] <- NA
+
+# Task 5
+# Then verify that the replacement
+# has happened successfully
+sum(is.na(brexit_data$Leave))
+
+na_records <- brexit_data[!complete.cases(brexit_data),]
+na_records
+nrow(na_records)
+
+# Using the mice and VIM packages to evaluate the data
+# for missing content
+library(mice)
+md.pattern(brexit_data, rotate.names = TRUE)
+
+library(VIM)
+missing_values <- aggr(brexit_data, prop = FALSE, number = TRUE,
+                       cex.axis = .45)
+summary(missing_values)
+
+# Task 7
+# Create a new variable called Proportion
+# Calculate the percent of leave votes 
+# and store it in the Proportion variable.
+# Proportion = leave / NVotes * 100
+brexit_data$Proportion <- brexit_data$Leave / brexit_data$NVotes *100
+
+# Task 8
+# If value in the Proportion variable is less than or equal to 0.5
+# assume that voters decided to "remain" in that ward.
+# Otherwise assume that voted to "leave" in that ward.
+brexit_data$Vote[brexit_data$Proportion <= 50] <- "Remain"
+brexit_data$Vote[brexit_data$Proportion > 50] <- "Leave"
+str(brexit_data)
+
+# Task 9
+# shorten the names of the region
+# to improve display of charts
+brexit_data$RegionName[brexit_data$RegionName == "London"] <- "L"
+brexit_data$RegionName[brexit_data$RegionName == "North West"] <- "NW"
+brexit_data$RegionName[brexit_data$RegionName == "North East"] <- "NE"
+brexit_data$RegionName[brexit_data$RegionName == "South West"] <- "SW"
+brexit_data$RegionName[brexit_data$RegionName == "South East"] <- "SE"
+brexit_data$RegionName[brexit_data$RegionName == "East Midlands"] <- "EM"
+brexit_data$RegionName[brexit_data$RegionName == "West Midlands"] <- "WM"
+brexit_data$RegionName[brexit_data$RegionName == "East of England"] <- "EE"
+brexit_data$RegionName[brexit_data$RegionName == "Yorkshire and The Humber"] <- "Y"
+
+summary(factor(brexit_data$RegionName))
+summary(factor(brexit_data$Vote))
+
+# view summary of the dataframe
+summary(brexit_data)
+min(brexit_data$White)
+
+numeric_variable_list <- sapply(brexit_data, is.numeric)
+numeric_variable_list
+
+# Create a subset of a dataframe
+# containing only numerical data
+numerical_data <- brexit_data[numeric_variable_list]
+summary(numerical_data)
+
+no_numerical_data <- brexit_data[!numeric_variable_list]
+summary(no_numerical_data)
