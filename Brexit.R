@@ -49,7 +49,7 @@ summary(missing_values)
 # Calculate the percent of leave votes 
 # and store it in the Proportion variable.
 # Proportion = leave / NVotes * 100
-brexit_data$Proportion <- brexit_data$Leave / brexit_data$NVotes *100
+brexit_data$Proportion <- brexit_data$Leave / brexit_data$NVotes
 
 # Task 8
 # If value in the Proportion variable is less than or equal to 0.5
@@ -151,3 +151,62 @@ barplot(height = prop.table(table(brexit_data$RegionName)),
         ylab = "Frequency", 
         xlab = "Region", 
         col = "white")
+
+# create a plot to show differences 
+# in qualifications
+# show the charts side by side
+# hint - mfrow
+
+# Use this as an example
+hist(brexit_data$MeanAge, 
+     main = "Histogram of mean adult age (years)")
+
+opar <- par(no.readonly = TRUE)
+
+par(mfrow = c(1, 2))
+
+hist(brexit_data$NoQuals, 
+     main = "Histogram of no qualifications", 
+     xlab = "% of residents")
+hist(brexit_data$L4Quals_plus, 
+     main = "Histogram of level 4 qualifications and above", 
+     xlab = "% of residents")
+
+# reset opar
+par(opar)
+
+plot(x = brexit_data$NoQuals, 
+     y = brexit_data$MeanAge, 
+     xlab = "No Qualifications", 
+     ylab = "Adult mean age")
+
+plot(x = brexit_data$L4Quals_plus, 
+     y = brexit_data$MeanAge, 
+     xlab = "Level 4 Qualifications", 
+     ylab = "Adult mean age")
+
+# examine the data in more detail
+variable_of_interest <- c("AdultMeanAge", 
+                          "Owned", 
+                          "NoQuals", 
+                          "L4Quals_plus", 
+                          "Unemp", 
+                          "HigherOccup", 
+                          "Deprived", 
+                          "Proportion")
+pairs(brexit_data[variable_of_interest])
+
+library(corrplot)
+
+corrplot(cor(brexit_data[variable_of_interest]), 
+         t1.col = "Black", 
+         t1.cex = 1, 
+         method = "number", 
+         addCoef.col = 1, 
+         number.cex = 0.8)
+
+# Next step - split up the data into meaningful variables
+# 2 groups of age - below and above age 45
+# 2 groups of ethnicity - white and non-white
+# 2 groups of education (higher and lower level of education)
+
