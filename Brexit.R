@@ -49,7 +49,7 @@ summary(missing_values)
 # Calculate the percent of leave votes 
 # and store it in the Proportion variable.
 # Proportion = leave / NVotes * 100
-brexit_data$Proportion <- brexit_data$Leave / brexit_data$NVotes
+brexit_data$Proportion <- brexit_data$Leave / brexit_data$NVotes * 100
 
 # Task 8
 # If value in the Proportion variable is less than or equal to 0.5
@@ -198,7 +198,7 @@ pairs(brexit_data[variable_of_interest])
 
 library(corrplot)
 
-corrplot(cor(brexit_data[variable_of_interest]), 
+corrplot(cor(brexit_data[variable_of_interest], use = "pairwise.complete.obs"), 
          t1.col = "Black", 
          t1.cex = 1, 
          method = "number", 
